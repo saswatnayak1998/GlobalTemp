@@ -7,7 +7,7 @@ data = pd.read_csv(url)
 
 data.columns = data.columns.map(str)
 
-st.title('Global Temperature Deviations')
+st.title('Global Temperature Deviations- Saswat K Nayak')
 
 selected_year = st.slider('Select Year', min_value=1961, max_value=2023, step=1)
 selected_year = str(selected_year)  # Convert to string to match dataframe columns
