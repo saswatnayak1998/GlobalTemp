@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-url = ""
+url = "https://raw.githubusercontent.com/saswatnayak1998/GlobalTemp/main/ClimateChangeStats.csv"
 data = pd.read_csv(url)
 
 data.columns = data.columns.map(str)
