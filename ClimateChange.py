@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-data = pd.read_csv('ClimateChangeStats.csv')
+url = ""
+data = pd.read_csv(url)
 
 data.columns = data.columns.map(str)
 
