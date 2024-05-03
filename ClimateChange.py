@@ -14,7 +14,7 @@ data_long = data.melt(id_vars=['Country', 'ISO3'], value_vars=year_columns,
 
 data_long.dropna(subset=['Temperature Deviation'], inplace=True)
 
-st.title('Global Temperature Deviations - Animated Map - Saswat K Nayak')
+st.title('Global Temperature Deviations - Saswat K Nayak')
 
 fig = px.choropleth(
     data_frame=data_long,
@@ -62,3 +62,43 @@ for country, slope in top_countries:
 st.subheader("Top 10 Countries with the Lowest Increase in Temperature Deviations")
 for country, slope in lowest_countries:
     st.write(f"{country}: {slope:.2f}°/year")
+
+
+
+
+url = "https://raw.githubusercontent.com/saswatnayak1998/GlobalTemp/main/ClimateChangeStats.csv"
+data = pd.read_csv(url)
+
+data.columns = data.columns.map(str)
+
+slopes = {}
+year_columns = [col for col in data.columns if col.isdigit()]
+for country in data['Country'].unique():
+    country_data = data[data['Country'] == country]
+    country_data = country_data[year_columns].transpose()
+    country_data.columns = ['Temperature Deviation']
+    country_data['Year'] = country_data.index.astype(int)
+    country_data.dropna(inplace=True)
+
+    if len(country_data['Year']) > 1:
+        slope, _ = np.polyfit(country_data['Year'], country_data['Temperature Deviation'], 1)
+        slopes[country] = slope
+
+top_countries = sorted_slopes[:100]
+lowest_countries = sorted_slopes[-100:]
+
+data['Slope'] = data['Country'].apply(lambda x: slopes.get(x, None))
+data['Highlight'] = data['Country'].apply(lambda x: 'Top 100' if x in [i[0] for i in top_countries] else ('Bottom 100' if x in [i[0] for i in lowest_countries] else 'Other'))
+
+fig = px.choropleth(
+    data_frame=data,
+    locations="ISO3",
+    color="Highlight",
+    hover_name="Country",
+    hover_data=["Slope"],
+    color_discrete_map={'Top 100': 'red', 'Bottom 100': 'blue', 'Other': 'lightgrey'},
+    projection="natural earth",
+    title="Global Temperature Deviations Slopes Highlighted"
+)
+fig.update_layout(margin={"r":0, "t":40, "l":0, "b":0})
+st.plotly_chart(fig, use_container_width=True)
