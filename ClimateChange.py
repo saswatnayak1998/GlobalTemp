@@ -14,7 +14,7 @@ data_long = data.melt(id_vars=['Country', 'ISO3'], value_vars=year_columns,
 
 data_long.dropna(subset=['Temperature Deviation'], inplace=True)
 
-st.title('Global Temperature Deviations - Saswat K Nayak')
+st.title('Global Temperatures - Saswat K Nayak')
 
 fig = px.choropleth(
     data_frame=data_long,
