@@ -98,7 +98,7 @@ fig = px.choropleth(
     hover_data=["Slope"],
     color_discrete_map={'Top 100: Highest Temperature Increase': 'red', 'Bottom 100 Lowest Temperature Increase': 'blue', 'Other': 'lightgrey'},
     projection="natural earth",
-    title="Global Temperature Deviations Slopes Highlighted"
+    title="Global Temperature Increase Map"
 )
 fig.update_layout(margin={"r":0, "t":40, "l":0, "b":0})
 st.plotly_chart(fig, use_container_width=True)
