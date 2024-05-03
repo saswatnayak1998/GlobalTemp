@@ -55,11 +55,11 @@ sorted_slopes = sorted(slopes.items(), key=lambda x: x[1], reverse=True)
 top_countries = sorted_slopes[:10]
 lowest_countries = sorted_slopes[-10:] if sorted_slopes else None
 
-st.subheader("Top 10 Countries with the Highest Increase in Temperature Deviations")
+st.subheader("Top 10 Countries with the Highest Increase in Temperature")
 for country, slope in top_countries:
     st.write(f"{country}: {slope:.2f}°/year")
 
-st.subheader("Top 10 Countries with the Lowest Increase in Temperature Deviations")
+st.subheader("Top 10 Countries with the Lowest Increase in Temperature")
 for country, slope in lowest_countries:
     st.write(f"{country}: {slope:.2f}°/year")
 
@@ -88,7 +88,7 @@ top_countries = sorted_slopes[:100]
 lowest_countries = sorted_slopes[-100:]
 
 data['Slope'] = data['Country'].apply(lambda x: slopes.get(x, None))
-data['Highlight'] = data['Country'].apply(lambda x: 'Top 100' if x in [i[0] for i in top_countries] else ('Bottom 100' if x in [i[0] for i in lowest_countries] else 'Other'))
+data['Highlight'] = data['Country'].apply(lambda x: 'Top 100: Highest Temperature Increase' if x in [i[0] for i in top_countries] else ('Bottom 100 Lowest Temperature Increase' if x in [i[0] for i in lowest_countries] else 'Other'))
 
 fig = px.choropleth(
     data_frame=data,
@@ -96,9 +96,49 @@ fig = px.choropleth(
     color="Highlight",
     hover_name="Country",
     hover_data=["Slope"],
-    color_discrete_map={'Top 100': 'red', 'Bottom 100': 'blue', 'Other': 'lightgrey'},
+    color_discrete_map={'Top 100: Highest Temperature Increase': 'red', 'Bottom 100 Lowest Temperature Increase': 'blue', 'Other': 'lightgrey'},
     projection="natural earth",
     title="Global Temperature Deviations Slopes Highlighted"
 )
 fig.update_layout(margin={"r":0, "t":40, "l":0, "b":0})
 st.plotly_chart(fig, use_container_width=True)
+
+data.columns = data.columns.map(str)
+
+# Calculate slopes for all countries
+slopes = {}
+year_columns = [col for col in data.columns if col.isdigit()]
+for country in data['Country'].unique():
+    country_data = data[data['Country'] == country]
+    country_data = country_data[year_columns].transpose()
+    country_data.columns = ['Temperature Deviation']
+    country_data['Year'] = country_data.index.astype(int)
+    country_data.dropna(inplace=True)  # Drop rows with NaN values
+
+    if len(country_data['Year']) > 1:
+        slope, _ = np.polyfit(country_data['Year'], country_data['Temperature Deviation'], 1)
+        slopes[country] = slope
+
+# Streamlit app layout
+st.subheader('Rate of change in Temperature for countries')
+slope_values = list(slopes.values())  # Extract just the slope values
+fig = px.histogram(slope_values, nbins=30, labels={'value': 'Slope'}, title="Histogram of Temperature Deviation Slopes")
+fig.update_layout(xaxis_title="Slope of Temperature Increase", yaxis_title="Count")
+st.plotly_chart(fig, use_container_width=True)
+
+# Display the choropleth map as optional
+st.subheader('Optional Global Map')
+if st.checkbox('Show Map'):
+    # Prepare data for the choropleth map
+    data['Slope'] = data['Country'].apply(lambda x: slopes.get(x, None))
+    fig_map = px.choropleth(
+        data_frame=data,
+        locations="ISO3",
+        color="Slope",
+        hover_name="Country",
+        color_continuous_scale=px.colors.sequential.Plasma,
+        projection="natural earth",
+        title="Global Temperature Deviations Slopes"
+    )
+    fig_map.update_layout(margin={"r":0, "t":40, "l":0, "b":0})
+    st.plotly_chart(fig_map, use_container_width=True)
