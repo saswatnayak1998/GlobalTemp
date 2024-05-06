@@ -128,7 +128,7 @@ st.subheader('Rate of change in Temperature for countries')
 slope_values = list(slopes.values())  # Extract just the slope values
 fig = px.histogram(slope_values, nbins=40, labels={'value': 'Slope'}, title="Histogram of Rate of Temperature Change", )
 fig.update_layout(
-    title=dict(text='Histogram of Rate of Temperature Change', x=0.5, font=dict(size=24)), # Center and increase title size
+    title=dict(text='Histogram of Rate of Temperature Change', font=dict(size=30)), # Center and increase title size
 
     xaxis_title="Slope of Temperature Increase",
     yaxis_title="Count",
