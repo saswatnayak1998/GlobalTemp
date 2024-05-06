@@ -102,9 +102,9 @@ fig = px.choropleth(
 )
 
 fig.update_layout(margin={"r":0, "t":40, "l":0, "b":0}, title_font=dict(size=24),  # Increase title font size
-    font=dict(size=18),  # General font size for other text elements like axis labels and hover info
-    legend_title_font_size=18,  # Font size for legend title
-    legend_font_size=18)
+    font=dict(size=22),  # General font size for other text elements like axis labels and hover info
+    legend_title_font_size=24,  # Font size for legend title
+    legend_font_size=22)
 st.plotly_chart(fig, use_container_width=True)
 
 data.columns = data.columns.map(str)
@@ -131,12 +131,12 @@ fig.update_layout(
     xaxis_title="Slope of Temperature Increase",
     yaxis_title="Count",
     xaxis=dict(
-        title_font=dict(size=18),  # Font size for x-axis title
-        tickfont=dict(size=18)     # Font size for x-axis ticks
+        title_font=dict(size=24),  # Font size for x-axis title
+        tickfont=dict(size=22)     # Font size for x-axis ticks
     ),
     yaxis=dict(
-        title_font=dict(size=18),  # Font size for y-axis title
-        tickfont=dict(size=18)     # Font size for y-axis ticks
+        title_font=dict(size=24),  # Font size for y-axis title
+        tickfont=dict(size=22)     # Font size for y-axis ticks
     )
 )
 st.plotly_chart(fig, use_container_width=True)
