@@ -126,7 +126,7 @@ for country in data['Country'].unique():
 # Streamlit app layout
 st.subheader('Rate of change in Temperature for countries')
 slope_values = list(slopes.values())  # Extract just the slope values
-fig = px.histogram(slope_values, nbins=30, labels={'value': 'Slope'}, title="Histogram of Temperature Deviation Slopes")
+fig = px.histogram(slope_values, nbins=40, labels={'value': 'Slope'}, title="Histogram of Temperature Deviation Slopes")
 fig.update_layout(
     xaxis_title="Slope of Temperature Increase",
     yaxis_title="Count",
