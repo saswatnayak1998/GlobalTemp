@@ -100,7 +100,11 @@ fig = px.choropleth(
     projection="natural earth",
     title="Global Temperature Increase Map"
 )
-fig.update_layout(margin={"r":0, "t":40, "l":0, "b":0})
+
+fig.update_layout(margin={"r":0, "t":40, "l":0, "b":0}, title_font=dict(size=24),  # Increase title font size
+    font=dict(size=18),  # General font size for other text elements like axis labels and hover info
+    legend_title_font_size=18,  # Font size for legend title
+    legend_font_size=18)
 st.plotly_chart(fig, use_container_width=True)
 
 data.columns = data.columns.map(str)
@@ -123,7 +127,18 @@ for country in data['Country'].unique():
 st.subheader('Rate of change in Temperature for countries')
 slope_values = list(slopes.values())  # Extract just the slope values
 fig = px.histogram(slope_values, nbins=30, labels={'value': 'Slope'}, title="Histogram of Temperature Deviation Slopes")
-fig.update_layout(xaxis_title="Slope of Temperature Increase", yaxis_title="Count")
+fig.update_layout(
+    xaxis_title="Slope of Temperature Increase",
+    yaxis_title="Count",
+    xaxis=dict(
+        title_font=dict(size=18),  # Font size for x-axis title
+        tickfont=dict(size=18)     # Font size for x-axis ticks
+    ),
+    yaxis=dict(
+        title_font=dict(size=18),  # Font size for y-axis title
+        tickfont=dict(size=18)     # Font size for y-axis ticks
+    )
+)
 st.plotly_chart(fig, use_container_width=True)
 
 # Display the choropleth map as optional
@@ -140,5 +155,5 @@ if st.checkbox('Show Map'):
         projection="natural earth",
         title="Global Temperature Deviations Slopes"
     )
-    fig_map.update_layout(margin={"r":0, "t":40, "l":0, "b":0})
+    fig_map.update_layout(margin={"r":0, "t":40, "l":0, "b":0}, )
     st.plotly_chart(fig_map, use_container_width=True)
