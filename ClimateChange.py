@@ -14,8 +14,13 @@ data_long = data.melt(id_vars=['Country', 'ISO3'], value_vars=year_columns,
 
 data_long.dropna(subset=['Temperature Deviation'], inplace=True)
 
+global_min = data_long['Temperature Deviation'].min()
+global_max = data_long['Temperature Deviation'].max()
+
+# Display the title
 st.title('Global Temperatures - Saswat K Nayak')
 
+# Create the choropleth map
 fig = px.choropleth(
     data_frame=data_long,
     locations="ISO3",
@@ -23,10 +28,15 @@ fig = px.choropleth(
     hover_name="Country",
     animation_frame="Year",
     color_continuous_scale=px.colors.sequential.Plasma,
+    range_color=[global_min, global_max],  # Fix the color scale
     projection="natural earth",
     title="Global Temperature Deviations Over the Years"
 )
+
+# Update layout to remove chart padding
 fig.update_layout(margin={"r":0, "t":40, "l":0, "b":0})
+
+# Display the figure in Streamlit
 st.plotly_chart(fig, use_container_width=True)
 
 country_selected = st.selectbox("Select or type a country", options=data['Country'].unique(), format_func=lambda x: x)
