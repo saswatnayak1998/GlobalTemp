@@ -101,9 +101,9 @@ fig = px.choropleth(
     title="Global Temperature Increase Map"
 )
 
-fig.update_layout(margin={"r":0, "t":40, "l":0, "b":0}, title_font=dict(size=24),  # Increase title font size
-    font=dict(size=22),  # General font size for other text elements like axis labels and hover info
-    legend_title_font_size=24,  # Font size for legend title
+fig.update_layout(margin={"r":0, "t":40, "l":0, "b":0}, title_font=dict(size=24),  
+    font=dict(size=22),  
+    legend_title_font_size=24,  
     legend_font_size=22)
 st.plotly_chart(fig, use_container_width=True)
 
@@ -117,7 +117,7 @@ for country in data['Country'].unique():
     country_data = country_data[year_columns].transpose()
     country_data.columns = ['Temperature Deviation']
     country_data['Year'] = country_data.index.astype(int)
-    country_data.dropna(inplace=True)  # Drop rows with NaN values
+    country_data.dropna(inplace=True)  
 
     if len(country_data['Year']) > 1:
         slope, _ = np.polyfit(country_data['Year'], country_data['Temperature Deviation'], 1)
@@ -126,8 +126,10 @@ for country in data['Country'].unique():
 # Streamlit app layout
 st.subheader('Rate of change in Temperature for countries')
 slope_values = list(slopes.values())  # Extract just the slope values
-fig = px.histogram(slope_values, nbins=40, labels={'value': 'Slope'}, title="Histogram of Temperature Deviation Slopes")
+fig = px.histogram(slope_values, nbins=40, labels={'value': 'Slope'}, title="Histogram of Rate of Temperature Change", )
 fig.update_layout(
+    title=dict(text='Histogram of Rate of Temperature Change', x=0.5, font=dict(size=40)), # Center and increase title size
+
     xaxis_title="Slope of Temperature Increase",
     yaxis_title="Count",
     xaxis=dict(
@@ -135,8 +137,8 @@ fig.update_layout(
         tickfont=dict(size=22)     # Font size for x-axis ticks
     ),
     yaxis=dict(
-        title_font=dict(size=24),  # Font size for y-axis title
-        tickfont=dict(size=22)     # Font size for y-axis ticks
+        title_font=dict(size=24),  
+        tickfont=dict(size=22)     
     )
 )
 st.plotly_chart(fig, use_container_width=True)
